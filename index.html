@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fake Advertisement Detection Dashboard</title>
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+
+<body>
+
+    <header class="hero-section">
+        <div class="hero-content">
+            <a href="/logout" class="logout-btn">Logout</a>
+            <h1>Fake Advertisement Detection and Analysis System</h1>
+            <p>
+                A Machine Learning and Data Science based dashboard that detects fake advertisements
+                using Clustering, Regression, Neural Network Classification, and Recommendation System.
+            </p>
+        </div>
+    </header>
+
+    <main class="container">
+
+        <section class="input-card">
+            <div class="section-title">
+                <span class="badge">Input Module</span>
+                <h2>Analyze Advertisement Text</h2>
+            </div>
+
+            <p class="small-text">
+                Enter any online advertisement content below. The system will analyze it using four different
+                machine learning and data science components.
+            </p>
+
+            <textarea id="adText"
+                placeholder="Example: Earn ₹50,000 daily without investment. Click now and claim your reward."></textarea>
+
+            <div class="button-row">
+                <button onclick="predictAd()">Run ML Analysis</button>
+                <button class="clear-btn" onclick="clearResult()">Clear</button>
+            </div>
+
+            <p id="loadingText" class="loading-text"></p>
+        </section>
+
+        <section id="summaryCard" class="summary-card hidden">
+            <div>
+                <span class="badge">Final Output</span>
+                <h2>Advertisement Prediction Summary</h2>
+            </div>
+
+            <div class="summary-grid">
+                <div class="summary-box">
+                    <p>Final Prediction</p>
+                    <h3 id="finalPrediction">-</h3>
+                </div>
+
+                <div class="summary-box">
+                    <p>Confidence</p>
+                    <h3 id="finalConfidence">-</h3>
+                </div>
+
+                <div class="summary-box">
+                    <p>Risk Level</p>
+                    <h3 id="finalRiskLevel">-</h3>
+                </div>
+
+                <div class="summary-box">
+                    <p>User Action</p>
+                    <h3 id="finalAction">-</h3>
+                </div>
+            </div>
+        </section>
+
+        <section id="dashboardSection" class="dashboard-section hidden">
+            <div class="section-title center">
+                <span class="badge">ML Dashboard</span>
+                <h2>Four Component Analysis</h2>
+                <p>
+                    Each component is represented separately to show how the system makes the final decision.
+                </p>
+            </div>
+
+            <div class="analysis-grid">
+
+                <div class="analysis-card neural-card">
+                    <div class="card-number">01</div>
+                    <h3>Neural Network Classification</h3>
+                    <p class="model-name">Model Used: <strong>MLPClassifier</strong></p>
+
+                    <div class="metric-row">
+                        <span>Prediction</span>
+                        <strong id="nnPrediction">-</strong>
+                    </div>
+
+                    <div class="metric-row">
+                        <span>Confidence Score</span>
+                        <strong id="nnConfidence">-</strong>
+                    </div>
+
+                    <p class="component-desc" id="nnExplanation">
+                        The neural network classifies advertisement text as Fake or Genuine.
+                    </p>
+                </div>
+
+                <div class="analysis-card regression-card">
+                    <div class="card-number">02</div>
+                    <h3>Regression Risk Analysis</h3>
+                    <p class="model-name">Model Used: <strong>Random Forest Regressor</strong></p>
+
+                    <div class="metric-row">
+                        <span>Risk Score</span>
+                        <strong id="riskScore">-</strong>
+                    </div>
+
+                    <div class="risk-bar-bg">
+                        <div id="riskBar" class="risk-bar"></div>
+                    </div>
+
+                    <div class="metric-row">
+                        <span>Risk Level</span>
+                        <strong id="riskLevel">-</strong>
+                    </div>
+
+                    <p class="component-desc" id="riskExplanation">
+                        Regression predicts how risky the advertisement is from 0 to 100.
+                    </p>
+                </div>
+
+                <div class="analysis-card cluster-card">
+                    <div class="card-number">03</div>
+                    <h3>Clustering Analysis</h3>
+                    <p class="model-name">Model Used: <strong>K-Means Clustering</strong></p>
+
+                    <div class="metric-row">
+                        <span>Cluster No</span>
+                        <strong id="clusterNumber">-</strong>
+                    </div>
+
+                    <div class="metric-row">
+                        <span>Category</span>
+                        <strong id="clusterName">-</strong>
+                    </div>
+
+                    <p class="component-desc" id="clusterExplanation">
+                        Clustering groups similar advertisements based on text patterns.
+                    </p>
+                </div>
+
+                <div class="analysis-card recommendation-card">
+                    <div class="card-number">04</div>
+                    <h3>Recommendation System</h3>
+                    <p class="model-name">Rule-Based Safety Recommendation</p>
+
+                    <div class="metric-row">
+                        <span>Suggested Action</span>
+                        <strong id="userAction">-</strong>
+                    </div>
+
+                    <div class="recommendation-box">
+                        <h4>Safety Advice</h4>
+                        <p id="recommendationText">-</p>
+                    </div>
+
+                    <p class="component-desc" id="recommendationExplanation">
+                        Recommendation is generated based on prediction and risk score.
+                    </p>
+                </div>
+
+            </div>
+        </section>
+
+        <section class="workflow-section">
+            <div class="section-title center">
+                <span class="badge">System Workflow</span>
+                <h2>How the Project Works</h2>
+            </div>
+
+            <div class="workflow">
+                <div class="workflow-step">
+                    <span>1</span>
+                    <h3>Advertisement Input</h3>
+                    <p>User enters advertisement text.</p>
+                </div>
+
+                <div class="arrow">→</div>
+
+                <div class="workflow-step">
+                    <span>2</span>
+                    <h3>TF-IDF Extraction</h3>
+                    <p>Text is converted into numerical features.</p>
+                </div>
+
+                <div class="arrow">→</div>
+
+                <div class="workflow-step">
+                    <span>3</span>
+                    <h3>ML Analysis</h3>
+                    <p>Clustering, regression, and neural network models analyze the ad.</p>
+                </div>
+
+                <div class="arrow">→</div>
+
+                <div class="workflow-step">
+                    <span>4</span>
+                    <h3>Recommendation</h3>
+                    <p>System gives safety advice to the user.</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="about-section">
+            <div class="section-title center">
+                <span class="badge">About Project</span>
+                <h2>Fake Advertisement Detection Using ML and Data Science</h2>
+            </div>
+
+            <p>
+                This project is designed to identify fake and misleading online advertisements.
+                It uses text analysis and machine learning methods to classify advertisements,
+                predict risk score, group similar advertisements, and recommend safety actions.
+                The system is useful for identifying scam offers, fake loan ads, prize frauds,
+                misleading job advertisements, and suspicious online promotions.
+            </p>
+        </section>
+
+    </main>
+
+    <footer class="footer">
+        <p>Machine Learning and Data Science</p>
+    </footer>
+
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+
+</html>
